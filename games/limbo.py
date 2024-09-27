@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 import random
-from models.bet import Bet
+from models.bet import LimboBet
 import db
 
 class Limbo:
@@ -15,7 +15,7 @@ class Limbo:
         return round(abs(1000000 / (1 - ran * (1 - Limbo.house_edge))), 2)
 
     @router.get("/limbo/bet")
-    async def bet(bet: Bet):
+    async def bet(bet: LimboBet):
         user = db.get_user(bet.username)
         if user.credit < bet.bet:
             return {"message": "Not enough credit"}
