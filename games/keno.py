@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 import random
-from models.bet import Bet
+from models.bet import KenoBet
 import db
 
 class Keno:
@@ -34,7 +34,7 @@ class Keno:
             return 1000
 
     @router.get("/keno/bet")
-    async def bet(bet: Bet):
+    async def bet(bet: KenoBet):
         print(bet)
         user = db.get_user(bet.username)
         if user.credit < bet.bet:
