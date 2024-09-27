@@ -11,5 +11,5 @@ def get_user(username: str):
     print(users[username])
     return users[username]
 
-def update_user_credit(username: str, credit: int):
+def update_user_credit(username: str, credit: float):
     users[username].credit = credit
