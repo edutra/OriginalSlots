@@ -1,4 +1,4 @@
 import pydantic
 class User(pydantic.BaseModel):
     username: str
-    credit: int
+    credit: float
