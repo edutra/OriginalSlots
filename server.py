@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 import uvicorn
 from games.keno import Keno
+from games.limbo import Limbo
 import db
 
 app = FastAPI()
@@ -15,4 +16,5 @@ async def get_user(username: str):
 if __name__ == "__main__":
 
     app.include_router(Keno.router)
+    app.include_router(Limbo.router)
     uvicorn.run(app, host="0.0.0.0", port=8000)
