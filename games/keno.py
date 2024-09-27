@@ -1,18 +1,12 @@
 from fastapi import APIRouter
 import random
-import pydantic
-class Keno:
+from models.bet import Bet
+import db
 
-    class Bet(pydantic.BaseModel):
-        numbers: list[int]
-        username: str
-        bet: int
+class Keno:
     router = APIRouter()
 
-    @router.get("/keno", tags=["keno"])
-    async def keno():
-        return {"msg": "Keno"}
-
+    @staticmethod
     def numbers():
         numbers = [x for x in range(1, 41)]
 
@@ -20,6 +14,7 @@ class Keno:
 
         return selected_numbers
 
+    @staticmethod
     def payout(correct_numbers):
         if(len(correct_numbers) <=3):
             return 0
@@ -38,15 +33,16 @@ class Keno:
         elif(len(correct_numbers) == 10):
             return 1000
 
-    @router.post("/bet")
+    @router.get("/bet")
     async def bet(bet: Bet):
-        print(bet.model_dump_json())
-        user = bet.username
-        users[user]['credit'] -= bet.bet
-        selected_numbers = numbers()
+        user = db.get_user(bet.username)
+        if user.credit < bet.bet:
+            return {"message": "Not enough credit"}
 
-
+        db.update_user_credit(user.username, user.credit - bet.bet)
+        selected_numbers = Keno.numbers()
         correct_numbers = [x for x in bet.numbers if x in selected_numbers]
+        new_credit = user.credit + (Keno.payout(correct_numbers) * bet.bet)
+        db.update_user_credit(user.username, new_credit)
 
-        users[user]['credit'] +=  payout(correct_numbers) * bet.bet
         return correct_numbers
