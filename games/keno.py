@@ -33,8 +33,9 @@ class Keno:
         elif(len(correct_numbers) == 10):
             return 1000
 
-    @router.get("/bet")
+    @router.get("/keno/bet")
     async def bet(bet: Bet):
+        print(bet)
         user = db.get_user(bet.username)
         if user.credit < bet.bet:
             return {"message": "Not enough credit"}
